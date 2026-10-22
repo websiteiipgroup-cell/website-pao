@@ -1,21 +1,22 @@
 # Ganti repo di bawah kalau nama repo GitHub-nya beda.
 backend:
   name: github
-  repo: websiteiipgroup-cell/refinol
+  repo: websiteiipgroup-cell/website-pao
   branch: main
-  # Worker login GitHub yang sama dengan website SLI. Tambahkan refinol.com (dan *.pages.dev-nya)
-  # ke variabel ALLOWED_DOMAINS di worker itu.
-  base_url: https://sveltia-cms-auth.websiteiipgroup.workers.dev
+  # Login lewat domain website sendiri (www.refinol.com/api/auth, kode di folder functions/),
+  # bukan lewat *.workers.dev yang sering diblokir ISP. Alamat ini diisi otomatis di admin/index.html.
+  base_url: https://www.refinol.com
+  auth_endpoint: api/auth
 
-# Untuk mencoba di komputer sendiri: jalankan `npm run cms` dan `npm run dev`, lalu buka http://localhost:4321/admin/
+# Untuk mencoba di komputer sendiri: jalankan `npm run cms` dan `npm run dev`, lalu buka http://localhost:4321/admin/index.html
 local_backend: true
 
 locale: id
 publish_mode: simple
 media_folder: public/images/uploads
 public_folder: /images/uploads
-site_url: https://refinol.com
-logo_url: /favicon.ico
+site_url: https://www.refinol.com
+logo_url: /images/uploads/logogram-pao.png
 
 collections:
   - name: halaman

@@ -9,7 +9,7 @@ Semua konten berupa file di repo ini, dan setiap perubahan dari admin tercatat s
 ```
 npm install
 npm run dev          # website di http://localhost:4321
-npm run cms          # (terminal kedua) admin lokal di http://localhost:4321/admin/index.html
+npm run cms          # (terminal kedua) admin lokal di http://localhost:4321/admin/index.html (tanpa login)
 ```
 
 ## Struktur konten (semua bisa diedit lewat /admin/)
@@ -34,16 +34,33 @@ Isi website berbahasa Inggris; label di admin berbahasa Indonesia.
 
 ## Online-kan (Cloudflare Pages)
 
-1. Upload folder ini ke repo GitHub baru, misalnya `websiteiipgroup-cell/refinol`
+1. Upload folder ini ke repo GitHub baru, yaitu `websiteiipgroup-cell/website-pao`
    (kalau namanya beda, ganti `repo` di `public/admin/config.yml`).
 2. Cloudflare dashboard → Workers & Pages → Create → Pages → hubungkan repo.
    Build command: `npm run build`, output: `dist`.
 3. Cek hasilnya di alamat `*.pages.dev`.
-4. Login admin memakai worker yang sama dengan SLI (`sveltia-cms-auth.websiteiipgroup.workers.dev`).
-   Tambahkan `refinol.com` dan alamat `*.pages.dev` Refinol ke variabel `ALLOWED_DOMAINS` di worker itu.
-5. Hubungkan domain `refinol.com` (Custom domains). Email `@refinol.com` masih dipakai, jadi pastikan
-   record MX (dan SPF/DKIM) ikut disalin sebelum nameserver dipindah.
-6. Setelah domain pindah, matikan/hapus WordPress lama di cPanel dan ganti password database lama.
+4. Siapkan login admin (sekali saja). Login berjalan di domain website sendiri (`/api/auth`, kodenya di folder
+   `functions/`), jadi tidak terganggu kalau ISP memblokir `*.workers.dev` atau `*.pages.dev`.
+   - GitHub → Settings → Developer settings → OAuth Apps → *New OAuth App*:
+     - Application name: `Admin Website Refinol`
+     - Homepage URL: `https://www.refinol.com`
+     - Authorization callback URL: `https://www.refinol.com/api/callback`
+       (untuk tes sebelum domain pindah, isi dulu `https://website-pao.pages.dev/api/callback`,
+       lalu ganti ke alamat www.refinol.com setelah domain tersambung).
+   - Klik *Generate a new client secret*, salin Client ID dan Client Secret.
+   - Cloudflare Pages → `website-pao` → Settings → Variables and Secrets, tambahkan:
+     - `GITHUB_CLIENT_ID` = Client ID
+     - `GITHUB_CLIENT_SECRET` = Client Secret (pilih tipe *Secret*)
+   - Deploy ulang (Deployments → Retry deployment), lalu buka `/admin/` dan klik *Login with GitHub*.
+   - Yang bisa masuk hanya akun GitHub yang punya akses ke repo ini (undang di repo → Settings → Collaborators).
+5. Domain tetap dikelola di cPanel hosting lama (email `@refinol.com` tetap di sana):
+   - Cloudflare Pages → `website-pao` → Custom domains → tambahkan `www.refinol.com`.
+   - cPanel → Zone Editor → ubah record `www` menjadi CNAME ke `website-pao.pages.dev`
+     (hapus dulu record A untuk `www` kalau ada).
+   - cPanel → Redirects → arahkan `refinol.com` ke `https://www.refinol.com/` (301, permanen).
+   - Jangan ubah record MX, supaya email tetap jalan.
+6. Setelah `www.refinol.com` menampilkan website baru, hapus WordPress lama dari `public_html`
+   (sisakan hanya `.htaccess` untuk redirect tadi) dan ganti password database lama.
 
 ## Alamat lama
 
@@ -57,6 +74,6 @@ Catatan: `/technology/` di situs lama berisi halaman Process; di situs baru alam
 - Deskripsi Palm kernel oil, Coconut oil, dan Soft oils (di situs lama halamannya kosong).
 - Spesifikasi produk (grade, dosis, kemasan) kalau mau ditampilkan.
 - Foto baru: foto lama dari 2017 dan sebagian dari WhatsApp, resolusinya rendah. Prioritas: foto latar hero di Home (landscape, minimal 1920 x 1000, tajam) — sekarang memakai foto pabrik 2017.
-- Logo (sekarang memakai tulisan "Refinol").
+- Logo (sekarang memakai tulisan "Refinol"). Logogram PAO dari situs lama ada di `public/images/uploads/logogram-pao.png` dan dipakai sebagai ikon tab browser.
 - Klaim "patent pending" di halaman Process dan Quality control berasal dari 2017; cek apakah statusnya sudah berubah.
 - Nomor WhatsApp dan medsos perusahaan di Pengaturan (akun medsos di situs lama masih contoh bawaan WordPress, jadi tidak dipindahkan).

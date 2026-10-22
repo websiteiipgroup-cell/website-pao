@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://refinol.com',
+  site: 'https://www.refinol.com',
 });

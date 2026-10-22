@@ -7,6 +7,12 @@
   <title>Admin Website Refinol</title>
 </head>
 <body>
+  <script>window.CMS_MANUAL_INIT = true;</script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // Login runs on the same domain the admin is opened from (www.refinol.com/api/auth),
+    // so it keeps working when an ISP blocks *.workers.dev. On localhost the CMS uses local_backend instead.
+    CMS.init({ config: { backend: { base_url: location.origin, auth_endpoint: 'api/auth' } } });
+  </script>
 </body>
 </html>
