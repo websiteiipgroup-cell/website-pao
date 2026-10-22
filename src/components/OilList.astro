@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+const { detailed = false } = Astro.props;
+const oils = (await getCollection('produk')).sort((a, b) => a.data.urutan - b.data.urutan || a.data.nama.localeCompare(b.data.nama));
+---
+<ul class={`oil-list${detailed ? ' oil-list--detailed' : ''}`}>
+  {oils.map((o) => (
+    <li class="oil" id={o.id}>
+      <a class="oil__link" href={`/products/${o.id}/`}>
+        <span class="oil__swatch" style={`--crude:${o.data.warna_crude};--refined:${o.data.warna_bleached}`} aria-hidden="true"></span>
+        <h3 class="oil__name">{o.data.nama}</h3>
+      </a>
+      {o.data.varian.length > 0 && <p class="oil__varieties">{o.data.varian.join(', ')}</p>}
+      {detailed && o.data.ringkasan && <p class="oil__summary">{o.data.ringkasan}</p>}
+      {o.data.grade.length > 0 && (
+        <ul class="oil__grades">{o.data.grade.map((g) => <li>{g}</li>)}</ul>
+      )}
+    </li>
+  ))}
+</ul>

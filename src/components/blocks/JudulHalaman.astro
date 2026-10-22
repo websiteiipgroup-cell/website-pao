@@ -1,0 +1,10 @@
+---
+const { b, page } = Astro.props;
+const step = page?.data?.langkah;
+const total = Astro.props.totalSteps;
+---
+<header class="wrap article__head">
+  {step && total && <p class="article__step">Step {step} of {total}, from deposit to refinery</p>}
+  <h1 class="article__title">{b.judul || page?.data?.judul}</h1>
+  {b.deskripsi && <p class="lead" style="margin-top:24px;max-width:34em">{b.deskripsi}</p>}
+</header>

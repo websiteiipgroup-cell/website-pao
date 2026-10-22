@@ -1,0 +1,21 @@
+---
+import site from '../../data/site.json';
+import { link, tel } from '../../lib/md';
+const { b } = Astro.props;
+---
+<section class="contact-strip">
+  <div class="wrap contact-strip__inner">
+    <div>
+      <h2 class="contact-strip__title">{b.judul || 'Tell us about your oil'}</h2>
+      {b.teks && <p style="margin:16px 0 0;max-width:34em">{b.teks}</p>}
+    </div>
+    <p class="contact-strip__links">
+      {b.tombol_teks
+        ? <a class="button button--light" href={link(b.tombol_link, site.whatsapp)}>{b.tombol_teks}</a>
+        : <>
+            <a class="button button--light" href={`mailto:${site.email}`}>{site.email}</a>
+            <a class="button button--light-quiet" href={tel(site.telepon)}>{site.telepon}</a>
+          </>}
+    </p>
+  </div>
+</section>

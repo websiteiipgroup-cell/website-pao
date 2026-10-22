@@ -1,0 +1,22 @@
+---
+import site from '../../data/site.json';
+import { tel } from '../../lib/md';
+const { b } = Astro.props;
+---
+<section class="wrap article__grid" id="contact" style="padding-bottom:clamp(56px,8vw,104px)">
+  <div class="article__body">
+    {b.judul && <h2 class="section-title" style="margin-bottom:24px">{b.judul}</h2>}
+    {b.pengantar && <p class="lead">{b.pengantar}</p>}
+    <p class="actions">
+      <a class="button" href={`mailto:${site.email}`}>Email {site.email}</a>
+      {site.whatsapp && <a class="button button--quiet" href={`https://wa.me/${site.whatsapp}`}>WhatsApp</a>}
+    </p>
+  </div>
+  <dl class="details">
+    <div><dt>Company</dt><dd>{site.nama_perusahaan}</dd></div>
+    <div><dt>Address</dt><dd>{site.alamat}{site.link_maps && <><br><a href={site.link_maps} rel="noopener">Open in Google Maps</a></>}</dd></div>
+    <div><dt>Phone</dt><dd><a href={tel(site.telepon)}>{site.telepon}</a></dd></div>
+    {site.fax && <div><dt>Fax</dt><dd>{site.fax}</dd></div>}
+    <div><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+  </dl>
+</section>

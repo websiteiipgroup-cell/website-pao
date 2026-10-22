@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props { title?: string; description?: string; image?: string; }
+const { title, description = site.deskripsi, image = site.og_image || '/images/uploads/granules.jpg' } = Astro.props;
+const fullTitle = title
+  ? `${title} | ${site.nama_merek}`
+  : `${site.nama_merek} — ${site.tagline} by ${site.nama_perusahaan}`;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+const isHome = path === '/';
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Organization',
+  name: site.nama_perusahaan, brand: site.nama_merek, url: Astro.site?.href,
+  email: site.email, telephone: site.telepon, address: site.alamat,
+};
+---
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script is:inline>document.documentElement.className = 'js';</script>
+  {isHome && (
+    /* Old WordPress links like /?page_id=8 can't be matched by _redirects (query string), so map them here. */
+    <script is:inline>
+      (function () {
+        var m = location.search.match(/[?&]page_id=(\d+)/); if (!m) return;
+        var map = { 8: '/about/', 9: '/contact/', 13: '/products/', 49: '/process/', 90: '/technology/', 91: '/quality-control/',
+          93: '/laboratory/', 109: '/products/palm-oil/', 110: '/products/palm-kernel-oil/', 111: '/products/coconut-oil/',
+          112: '/products/soft-oil/', 133: '/products/soft-oil/', 134: '/products/soft-oil/', 136: '/products/soft-oil/' };
+        location.replace(map[m[1]] || '/');
+      })();
+    </script>
+  )}
+  <title>{fullTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={new URL(path, Astro.site)}>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={fullTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content={new URL(image, Astro.site)}>
+  <meta property="og:url" content={new URL(path, Astro.site)}>
+  <meta name="theme-color" content="#e4e5df">
+  <link rel="icon" href={site.ikon || '/favicon.ico'}>
+  <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="brand" href="/" aria-label={`${site.nama_merek}, home`}>
+        {site.logo
+          ? <img class="brand__logo" src={site.logo} alt={site.nama_merek} />
+          : <><span class="brand__name">{site.nama_merek}</span><span class="brand__company">{site.nama_perusahaan}</span></>}
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" class="nav" aria-label="Main">
+        <ul>
+          {site.menu.map((n) => <li><a href={n.link} aria-current={isCurrent(n.link) ? 'page' : undefined}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <p class="footer__name">{site.nama_merek}</p>
+        <p>{site.tagline} by {site.nama_perusahaan}</p>
+      </div>
+      <address>
+        {site.alamat}<br>
+        <a href={'tel:' + site.telepon.replace(/[^0-9+]/g, '')}>{site.telepon}</a><br>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </address>
+      <p class="footer__legal">
+        © {new Date().getFullYear()} {site.nama_perusahaan}
+        {site.linkedin && <><br><a href={site.linkedin}>LinkedIn</a></>}
+        {site.instagram && <><br><a href={site.instagram}>Instagram</a></>}
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+    const nav = document.getElementById('site-nav');
+    const setOpen = (open: boolean) => {
+      nav?.classList.toggle('is-open', open);
+      toggle?.setAttribute('aria-expanded', String(open));
+      if (toggle) toggle.textContent = open ? 'Close' : 'Menu';
+    };
+    toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav?.classList.contains('is-open')) { setOpen(false); toggle?.focus(); }
+    });
+  </script>
+</body>
+</html>

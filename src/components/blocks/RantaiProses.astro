@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Foto from '../Foto.astro';
+const { b } = Astro.props;
+const steps = (await getCollection('halaman', (p) => typeof p.data.langkah === 'number'))
+  .sort((x, y) => (x.data.langkah ?? 0) - (y.data.langkah ?? 0));
+---
+{steps.length > 0 && (
+<section class="chain">
+  <div class="wrap">
+    {b.judul && <h2 class="section-title">{b.judul}</h2>}
+    <ol class="chain__list">
+      {steps.map((p) => (
+        <li class="chain__step">
+          <a class="chain__link" href={`/${p.id}/`}>
+            <span class="chain__media"><Foto src={p.data.gambar} alt="" /></span>
+            <span class="chain__name">{p.data.judul}</span>
+            {p.data.ringkasan && <span class="chain__summary">{p.data.ringkasan}</span>}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+)}

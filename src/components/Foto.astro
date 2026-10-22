@@ -1,0 +1,7 @@
+---
+interface Props { src?: string; alt?: string; label?: string; eager?: boolean; class?: string; }
+const { src, alt = '', label = 'Photo not uploaded yet', eager = false, class: cls } = Astro.props;
+---
+{src
+  ? <img class={cls} src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  : <div class="foto-kosong" role="img" aria-label={label}>{label}</div>}

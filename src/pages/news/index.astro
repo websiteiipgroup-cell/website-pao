@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import NewsList from '../../components/NewsList.astro';
+import site from '../../data/site.json';
+const items = (await getCollection('berita', (p) => !p.data.draft))
+  .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
+---
+<Base title={site.berita_judul || 'News'}>
+  <header class="wrap article__head"><h1 class="article__title">{site.berita_judul || 'News'}</h1></header>
+  <div class="wrap" style="padding-bottom:clamp(56px,8vw,104px)">
+    {items.length > 0
+      ? <NewsList items={items} />
+      : <p class="lead">No news yet. <a href="/contact/">Contact us</a> for the latest on Refinol.</p>}
+  </div>
+</Base>

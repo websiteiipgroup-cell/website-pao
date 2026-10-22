@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import Ajakan from '../../components/blocks/Ajakan.astro';
+
+export async function getStaticPaths() {
+  const oils = await getCollection('produk');
+  return oils.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await render(p);
+const d = p.data;
+const hasBody = Boolean(p.body?.trim());
+---
+<Base title={`Bleaching earth for ${d.nama.toLowerCase()}`} description={d.ringkasan || `Refinol activated bleaching earth for ${d.nama.toLowerCase()} refining.`} image={d.gambar || undefined}>
+  <header class="wrap article__head">
+    <p class="breadcrumb"><a href="/products/">Products</a></p>
+    <h1 class="article__title">{d.nama}</h1>
+  </header>
+  <div class="wrap article__grid" style="padding-bottom:clamp(56px,8vw,104px)">
+    <div class="article__body">
+      <span class="swatch-wide" style={`--crude:${d.warna_crude};--refined:${d.warna_bleached}`} aria-hidden="true"></span>
+      <p class="swatch-wide-caption" aria-hidden="true"><span>Crude</span><span>Bleached</span></p>
+      {d.ringkasan && <p class="lead">{d.ringkasan}</p>}
+      {d.varian.length > 0 && (
+        <div class="spec"><h2>Oils covered</h2><ul class="oil__grades">{d.varian.map((v) => <li>{v}</li>)}</ul></div>
+      )}
+      {d.grade.length > 0 && (
+        <div class="spec"><h2>Grades</h2><ul class="oil__grades">{d.grade.map((g) => <li>{g}</li>)}</ul></div>
+      )}
+      {hasBody
+        ? <div class="prose"><Content /></div>
+        : <p>We develop the grade from your oil and your process. <a href="/contact/">Tell us what you refine</a> and we’ll recommend a starting point.</p>}
+    </div>
+    {d.gambar && <figure class="article__media"><Foto src={d.gambar} alt={d.nama} eager /></figure>}
+  </div>
+  <Ajakan b={{}} />
+</Base>

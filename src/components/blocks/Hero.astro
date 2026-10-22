@@ -1,0 +1,44 @@
+---
+import site from '../../data/site.json';
+import { link } from '../../lib/md';
+const { b } = Astro.props;
+
+/* Colour ramp for the band: crude palm oil on the left, bleached oil on the right. */
+const stops = [[74, 24, 6], [138, 47, 12], [196, 96, 24], [230, 160, 52], [242, 210, 120], [249, 238, 200]];
+const slices = 14;
+const band = Array.from({ length: slices }, (_, i) => {
+  const t = (i / (slices - 1)) * (stops.length - 1);
+  const a = Math.floor(t), c = Math.min(a + 1, stops.length - 1), f = t - a;
+  const rgb = stops[a].map((x, k) => Math.round(x + (stops[c][k] - x) * f));
+  return '#' + rgb.map((v) => v.toString(16).padStart(2, '0')).join('');
+});
+const showBand = b.pita !== false;
+---
+<section class={`hero${b.gambar ? ' hero--latar' : ''}`}>
+  <div class="hero__stage">
+  {b.gambar && <img class="hero__bg" src={b.gambar} alt="" fetchpriority="high" decoding="async" />}
+  <div class="wrap hero__grid">
+  <div class="hero__text">
+    <h1 class="hero__title">{b.judul}</h1>
+    {b.deskripsi && <p class="hero__lead">{b.deskripsi}</p>}
+    {(b.tombol1_teks || b.tombol2_teks) && (
+      <p class="actions">
+        {b.tombol1_teks && <a class="button" href={link(b.tombol1_link, site.whatsapp)}>{b.tombol1_teks}</a>}
+        {b.tombol2_teks && <a class="button button--quiet" href={link(b.tombol2_link, site.whatsapp)}>{b.tombol2_teks}</a>}
+      </p>
+    )}
+  </div>
+  </div>
+  </div>
+  {showBand && (
+    <figure class="band" aria-label={`Oil colour from ${b.pita_kiri || 'crude palm oil'} to ${b.pita_kanan || 'bleached'}`}>
+      <div class="band__strip" aria-hidden="true">
+        {band.map((c, i) => <span style={`--c:${c};--i:${i}`}></span>)}
+      </div>
+      <figcaption class="wrap band__caption">
+        <span>{b.pita_kiri || 'Crude palm oil'}</span>
+        <span>{b.pita_kanan || 'Bleached'}</span>
+      </figcaption>
+    </figure>
+  )}
+</section>

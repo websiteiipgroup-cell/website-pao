@@ -1,0 +1,22 @@
+---
+import Hero from './Hero.astro';
+import JudulHalaman from './JudulHalaman.astro';
+import Teks from './Teks.astro';
+import TeksFoto from './TeksFoto.astro';
+import Galeri from './Galeri.astro';
+import RantaiProses from './RantaiProses.astro';
+import ProdukMinyak from './ProdukMinyak.astro';
+import BeritaTerbaru from './BeritaTerbaru.astro';
+import Ajakan from './Ajakan.astro';
+import Kontak from './Kontak.astro';
+const map: Record<string, any> = {
+  hero: Hero, judul_halaman: JudulHalaman, teks: Teks, teks_foto: TeksFoto, galeri: Galeri,
+  rantai_proses: RantaiProses, produk_minyak: ProdukMinyak, berita_terbaru: BeritaTerbaru,
+  ajakan: Ajakan, kontak: Kontak,
+};
+const { blocks = [], page, totalSteps } = Astro.props;
+---
+{blocks.map((b: any, i: number) => {
+  const C = map[b.type];
+  return C ? <C b={b} page={page} totalSteps={totalSteps} first={i <= 1} /> : null;
+})}

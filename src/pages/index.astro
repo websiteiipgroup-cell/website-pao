@@ -1,0 +1,9 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/blocks/Blocks.astro';
+const page = await getEntry('halaman', 'home');
+---
+<Base description={page?.data.deskripsi || undefined}>
+  <Blocks blocks={page?.data.blocks ?? []} page={page} />
+</Base>

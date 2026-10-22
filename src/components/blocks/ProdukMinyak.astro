@@ -1,0 +1,12 @@
+---
+import OilList from '../OilList.astro';
+const { b } = Astro.props;
+---
+<section class="wrap oils">
+  <div class="oils__head">
+    {b.judul && <h2 class="section-title">{b.judul}</h2>}
+    {b.pengantar && <p>{b.pengantar}</p>}
+  </div>
+  <OilList />
+  <p><a class="link" href="/products/">{b.link_teks || 'All products'}</a></p>
+</section>

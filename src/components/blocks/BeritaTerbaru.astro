@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import NewsList from '../NewsList.astro';
+const { b } = Astro.props;
+const items = (await getCollection('berita', (p) => !p.data.draft))
+  .sort((x, y) => y.data.tanggal.valueOf() - x.data.tanggal.valueOf())
+  .slice(0, b.jumlah || 3);
+---
+{items.length > 0 && (
+<section class="section section--paper"><div class="wrap">
+  <h2 class="section-title" style="margin-bottom:40px">{b.judul || 'News'}</h2>
+  <NewsList items={items} />
+  <p style="margin-top:32px"><a class="link" href="/news/">All news</a></p>
+</div></section>
+)}

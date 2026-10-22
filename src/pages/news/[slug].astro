@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('berita', (p) => !p.data.draft);
+  return items.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await render(p);
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title={p.data.judul} description={p.data.ringkasan || undefined} image={p.data.cover || undefined}>
+  <article class="article">
+    <header class="wrap article__head">
+      <p class="breadcrumb"><a href="/news/">News</a></p>
+      <p class="article__date"><time datetime={p.data.tanggal.toISOString().slice(0, 10)}>{fmt(p.data.tanggal)}</time></p>
+      <h1 class="article__title" style="font-size:var(--step-3);max-width:22ch">{p.data.judul}</h1>
+    </header>
+    <div class="wrap">
+      {p.data.cover && <figure class="article__cover"><img src={p.data.cover} alt="" /></figure>}
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+</Base>

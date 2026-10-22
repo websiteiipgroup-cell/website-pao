@@ -1,0 +1,16 @@
+---
+const { items } = Astro.props;
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<ul class="news-list">
+  {items.map((n: any) => (
+    <li class="news-item">
+      <a href={`/news/${n.id}/`}>
+        {n.data.cover && <img src={n.data.cover} alt="" loading="lazy" decoding="async" />}
+        <time datetime={n.data.tanggal.toISOString().slice(0, 10)}>{fmt(n.data.tanggal)}</time>
+        <h3>{n.data.judul}</h3>
+        {n.data.ringkasan && <p>{n.data.ringkasan}</p>}
+      </a>
+    </li>
+  ))}
+</ul>

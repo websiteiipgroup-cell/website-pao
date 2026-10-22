@@ -1,0 +1,210 @@
+# Ganti repo di bawah kalau nama repo GitHub-nya beda.
+backend:
+  name: github
+  repo: websiteiipgroup-cell/refinol
+  branch: main
+  # Worker login GitHub yang sama dengan website SLI. Tambahkan refinol.com (dan *.pages.dev-nya)
+  # ke variabel ALLOWED_DOMAINS di worker itu.
+  base_url: https://sveltia-cms-auth.websiteiipgroup.workers.dev
+
+# Untuk mencoba di komputer sendiri: jalankan `npm run cms` dan `npm run dev`, lalu buka http://localhost:4321/admin/
+local_backend: true
+
+locale: id
+publish_mode: simple
+media_folder: public/images/uploads
+public_folder: /images/uploads
+site_url: https://refinol.com
+logo_url: /favicon.ico
+
+collections:
+  - name: halaman
+    label: Halaman
+    label_singular: Halaman
+    folder: src/content/halaman
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: judul
+    description: "Halaman 'Home' adalah halaman depan, jangan dihapus. Halaman baru bisa dibuka di refinol.com/nama-halaman/ dan ditambahkan ke menu lewat Pengaturan. Isi website dalam bahasa Inggris."
+    fields:
+      - { label: Judul halaman, name: judul, widget: string, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+      - { label: Deskripsi untuk Google (1 kalimat), name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,160}$", "Maksimal 160 karakter"] }
+      - label: Urutan di alur "From deposit to your refinery"
+        name: langkah
+        widget: number
+        value_type: int
+        min: 1
+        max: 8
+        required: false
+        hint: "Isi angka (1, 2, 3...) supaya halaman ini muncul di alur proses di Home, lengkap dengan tombol Previous/Next. Kosongkan kalau bukan bagian alur."
+      - { label: Ringkasan untuk kartu alur proses, name: ringkasan, widget: string, required: false, pattern: ["^[\\s\\S]{0,120}$", "Maksimal 120 karakter"] }
+      - { label: Foto untuk kartu alur proses dan share link, name: gambar, widget: image, required: false }
+      - label: Isi halaman (susun blok)
+        name: blocks
+        widget: list
+        label_singular: blok
+        types:
+          - label: Hero (bagian besar paling atas, untuk Home)
+            name: hero
+            widget: object
+            summary: "Hero: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,40}$", "Maksimal 40 karakter, judulnya tampil sangat besar"] }
+              - { label: Deskripsi, name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+              - { label: Teks tombol utama, name: tombol1_teks, widget: string, required: false, pattern: ["^[\\s\\S]{0,30}$", "Maksimal 30 karakter"] }
+              - { label: Link tombol utama, name: tombol1_link, widget: string, required: false, hint: "Contoh: /products/ atau whatsapp" }
+              - { label: Teks tombol kedua, name: tombol2_teks, widget: string, required: false, pattern: ["^[\\s\\S]{0,30}$", "Maksimal 30 karakter"] }
+              - { label: Link tombol kedua, name: tombol2_link, widget: string, required: false }
+              - { label: Foto latar (di belakang judul), name: gambar, widget: image, required: false, hint: "Opsional. Landscape, minimal 1920 x 1000 piksel dan tajam. Otomatis digelapkan di sisi kiri supaya tulisan tetap terbaca. Kosongkan untuk latar polos." }
+              - { label: Tampilkan pita warna minyak, name: pita, widget: boolean, default: true }
+              - { label: Keterangan kiri pita, name: pita_kiri, widget: string, required: false, default: Crude palm oil }
+              - { label: Keterangan kanan pita, name: pita_kanan, widget: string, required: false, default: Bleached }
+          - label: Judul halaman
+            name: judul_halaman
+            widget: object
+            summary: "Judul: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,40}$", "Maksimal 40 karakter"] }
+              - { label: Pengantar, name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,220}$", "Maksimal 220 karakter"] }
+          - label: Teks dengan foto
+            name: teks_foto
+            widget: object
+            summary: "Teks + foto: {{fields.judul}}{{fields.pengantar}}"
+            fields:
+              - { label: Subjudul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+              - { label: Kalimat pembuka (tampil lebih besar), name: pengantar, widget: text, required: false, pattern: ["^[\\s\\S]{0,240}$", "Maksimal 240 karakter"] }
+              - { label: Isi, name: isi, widget: markdown, required: false }
+              - { label: Foto (landscape), name: gambar, widget: image }
+              - { label: Keterangan foto untuk tunanetra dan Google, name: gambar_alt, widget: string, required: false, hint: "Jelaskan isi foto singkat, contoh: Pilot plant simulating oil bleaching" }
+              - { label: Posisi foto, name: posisi_foto, widget: select, options: [kanan, kiri], default: kanan }
+              - { label: Teks link di bawah, name: link_teks, widget: string, required: false }
+              - { label: Alamat link, name: link_url, widget: string, required: false, hint: "Contoh: /about/" }
+          - label: Teks
+            name: teks
+            widget: object
+            summary: "Teks: {{fields.judul}}"
+            fields:
+              - { label: Subjudul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,80}$", "Maksimal 80 karakter"] }
+              - { label: Isi, name: isi, widget: markdown }
+          - label: Galeri foto
+            name: galeri
+            widget: object
+            summary: "Galeri: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,80}$", "Maksimal 80 karakter"] }
+              - label: Foto
+                name: foto
+                widget: list
+                fields:
+                  - { label: Foto, name: gambar, widget: image }
+                  - { label: Keterangan, name: keterangan, widget: string, required: false, pattern: ["^[\\s\\S]{0,100}$", "Maksimal 100 karakter"] }
+          - label: Alur proses "From deposit to your refinery" (otomatis)
+            name: rantai_proses
+            widget: object
+            summary: "Alur proses: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"], hint: "Isinya otomatis dari halaman yang punya nomor urutan alur." }
+          - label: Daftar produk minyak (otomatis)
+            name: produk_minyak
+            widget: object
+            summary: "Produk: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+              - { label: Pengantar, name: pengantar, widget: text, required: false, pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+              - { label: Teks link ke halaman produk, name: link_teks, widget: string, required: false, default: All products }
+          - label: Berita terbaru (otomatis, tidak tampil kalau belum ada berita)
+            name: berita_terbaru
+            widget: object
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+              - { label: Jumlah berita, name: jumlah, widget: number, value_type: int, min: 1, max: 6, default: 3 }
+          - label: Ajakan menghubungi (pita merah tua)
+            name: ajakan
+            widget: object
+            summary: "Ajakan: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,40}$", "Maksimal 40 karakter"] }
+              - { label: Teks, name: teks, widget: text, required: false, pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+              - { label: Teks tombol, name: tombol_teks, widget: string, required: false, pattern: ["^[\\s\\S]{0,30}$", "Maksimal 30 karakter"], hint: "Kosongkan untuk menampilkan tombol email dan telepon dari Pengaturan." }
+              - { label: Link tombol, name: tombol_link, widget: string, required: false, hint: "Isi 'whatsapp' untuk ke WhatsApp, atau link seperti /contact/" }
+          - label: Alamat dan kontak
+            name: kontak
+            widget: object
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+              - { label: Pengantar, name: pengantar, widget: text, required: false, pattern: ["^[\\s\\S]{0,220}$", "Maksimal 220 karakter"] }
+
+  - name: produk
+    label: Produk
+    label_singular: Produk
+    folder: src/content/produk
+    create: true
+    slug: "{{slug}}"
+    identifier_field: nama
+    summary: "{{nama}}"
+    sortable_fields: [urutan, nama]
+    description: "Satu entri per jenis minyak yang dilayani. Tampil di refinol.com/products/ dan halaman detailnya."
+    fields:
+      - { label: Jenis minyak, name: nama, widget: string, pattern: ["^[\\s\\S]{0,40}$", "Maksimal 40 karakter"], hint: "Contoh: Palm oil" }
+      - { label: Urutan tampil, name: urutan, widget: number, value_type: int, default: 10 }
+      - { label: Ringkasan singkat, name: ringkasan, widget: text, required: false, pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+      - { label: Varian minyak (kalau satu grup), name: varian, widget: list, required: false, hint: "Contoh untuk Soft oils: Soya bean oil, Rapeseed oil" }
+      - { label: Grade yang tersedia, name: grade, widget: list, required: false }
+      - { label: Warna minyak crude, name: warna_crude, widget: color, default: "#8a2f0c", hint: "Dipakai untuk garis warna crude → bleached" }
+      - { label: Warna minyak setelah bleaching, name: warna_bleached, widget: color, default: "#e8b52c" }
+      - { label: Foto (opsional, landscape), name: gambar, widget: image, required: false }
+      - { label: Penjelasan lengkap (spesifikasi, dosis, kemasan), name: body, widget: markdown, required: false }
+
+  - name: berita
+    label: Berita
+    label_singular: Artikel
+    folder: src/content/berita
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: judul
+    summary: "{{judul}} ({{tanggal}})"
+    sortable_fields: [tanggal, judul]
+    description: "Setelah ada artikel, tambahkan menu News (/news/) lewat Pengaturan."
+    fields:
+      - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,110}$", "Maksimal 110 karakter"] }
+      - { label: Tanggal, name: tanggal, widget: datetime, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+      - { label: Foto cover, name: cover, widget: image, required: false }
+      - { label: Ringkasan (1-2 kalimat), name: ringkasan, widget: text, required: false, pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+      - { label: Simpan sebagai draft (belum tayang), name: draft, widget: boolean, default: false }
+      - { label: Isi artikel, name: body, widget: markdown }
+
+  - name: pengaturan
+    label: Pengaturan
+    editor: { preview: false }
+    files:
+      - label: Info perusahaan, kontak, dan menu
+        name: site
+        file: src/data/site.json
+        fields:
+          - { label: Nama merek, name: nama_merek, widget: string }
+          - { label: Nama perusahaan, name: nama_perusahaan, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Deskripsi perusahaan untuk Google dan WhatsApp, name: deskripsi, widget: text, pattern: ["^[\\s\\S]{0,160}$", "Maksimal 160 karakter"] }
+          - { label: Logo (PNG/SVG, latar transparan), name: logo, widget: image, required: false, hint: "Kosongkan untuk memakai tulisan Refinol." }
+          - { label: Ikon kecil di tab browser (persegi 512x512), name: ikon, widget: image, required: false }
+          - { label: Gambar saat link dibagikan di WA/medsos (1200x630), name: og_image, widget: image, required: false }
+          - { label: Alamat, name: alamat, widget: text }
+          - { label: Link Google Maps, name: link_maps, widget: string, required: false }
+          - { label: Telepon, name: telepon, widget: string }
+          - { label: Fax, name: fax, widget: string, required: false }
+          - { label: Email, name: email, widget: string }
+          - { label: Nomor WhatsApp (format 628xxx), name: whatsapp, widget: string, required: false }
+          - { label: LinkedIn, name: linkedin, widget: string, required: false }
+          - { label: Instagram, name: instagram, widget: string, required: false }
+          - label: Menu utama
+            name: menu
+            widget: list
+            summary: "{{fields.label}} ({{fields.link}})"
+            fields:
+              - { label: Teks menu, name: label, widget: string, pattern: ["^[\\s\\S]{0,20}$", "Maksimal 20 karakter"] }
+              - { label: Link, name: link, widget: string, hint: "Contoh: /about/ atau /products/" }
+          - { label: Judul halaman Products, name: produk_judul, widget: string, pattern: ["^[\\s\\S]{0,40}$", "Maksimal 40 karakter"] }
+          - { label: Pengantar halaman Products, name: produk_pengantar, widget: text, pattern: ["^[\\s\\S]{0,300}$", "Maksimal 300 karakter"] }
+          - { label: Foto halaman Products, name: produk_gambar, widget: image, required: false }
+          - { label: Judul halaman News, name: berita_judul, widget: string, required: false }

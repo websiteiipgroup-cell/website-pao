@@ -1,0 +1,18 @@
+---
+import { md, link } from '../../lib/md';
+import site from '../../data/site.json';
+import Foto from '../Foto.astro';
+const { b, first = false } = Astro.props;
+const kiri = b.posisi_foto === 'kiri';
+---
+<section class={`wrap intro ${kiri ? 'intro--kiri' : 'intro--kanan'}${first ? ' intro--first' : ''}`}>
+  <figure class="intro__media">
+    <Foto src={b.gambar} alt={b.gambar_alt || ''} eager={first} />
+  </figure>
+  <div class="intro__text prose">
+    {b.judul && <h2>{b.judul}</h2>}
+    {b.pengantar && <p class="lead">{b.pengantar}</p>}
+    <Fragment set:html={md(b.isi)} />
+    {b.link_teks && <p><a class="link" href={link(b.link_url, site.whatsapp)}>{b.link_teks}</a></p>}
+  </div>
+</section>

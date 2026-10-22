@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import OilList from '../../components/OilList.astro';
+import Foto from '../../components/Foto.astro';
+import Ajakan from '../../components/blocks/Ajakan.astro';
+import site from '../../data/site.json';
+---
+<Base title={site.produk_judul} description={site.produk_pengantar.slice(0, 160)} image={site.produk_gambar || undefined}>
+  <header class="wrap article__head"><h1 class="article__title">{site.produk_judul}</h1></header>
+  <div class="wrap article__grid">
+    <div class="article__body"><p class="lead">{site.produk_pengantar}</p></div>
+    <figure class="article__media"><Foto src={site.produk_gambar} alt="Bottles of refined vegetable oils" eager /></figure>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(56px,8vw,104px)"><OilList detailed /></div>
+  <Ajakan b={{}} />
+</Base>
