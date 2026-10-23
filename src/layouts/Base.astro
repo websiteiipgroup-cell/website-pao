@@ -99,6 +99,80 @@ const schema = {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && nav?.classList.contains('is-open')) { setOpen(false); toggle?.focus(); }
     });
+
+    // Email links: on phones, mailto opens the mail app directly. On computers many people have no
+    // mail app set up, so a click shows a small menu: write in Gmail, open the mail app, or copy the address.
+    const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (!isTouch) {
+      const menu = document.createElement('div');
+      menu.className = 'mail-menu';
+      menu.setAttribute('role', 'menu');
+      menu.hidden = true;
+      document.body.appendChild(menu);
+      let opener: HTMLAnchorElement | null = null;
+
+      const close = (refocus = false) => {
+        menu.hidden = true;
+        if (refocus) opener?.focus();
+        opener = null;
+      };
+
+      const open = (a: HTMLAnchorElement) => {
+        const raw = a.href.replace(/^mailto:/i, '');
+        const [addr, query = ''] = raw.split('?');
+        const email = decodeURIComponent(addr);
+        const params = new URLSearchParams(query);
+        const subject = params.get('subject') || 'Enquiry from refinol.com';
+        const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}`;
+        const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+        menu.innerHTML = '';
+        const item = (label: string, el: HTMLElement) => { el.textContent = label; el.setAttribute('role', 'menuitem'); el.className = 'mail-menu__item'; menu.appendChild(el); return el; };
+        const g = item('Write in Gmail', document.createElement('a')) as HTMLAnchorElement;
+        g.href = gmail; g.target = '_blank'; g.rel = 'noopener';
+        const m = item('Open email app', document.createElement('a')) as HTMLAnchorElement;
+        m.href = mailto;
+        const c = item('Copy address', document.createElement('button')) as HTMLButtonElement;
+        c.type = 'button';
+        c.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText(email); c.textContent = 'Copied'; }
+          catch { c.textContent = email; }
+          setTimeout(() => close(true), 900);
+        });
+        [g, m].forEach((el) => el.addEventListener('click', () => close()));
+
+        const r = a.getBoundingClientRect();
+        menu.hidden = false;
+        const w = menu.offsetWidth, h = menu.offsetHeight;
+        const left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8);
+        const below = r.bottom + 6 + h < window.innerHeight;
+        menu.style.left = `${left + window.scrollX}px`;
+        menu.style.top = `${(below ? r.bottom + 6 : r.top - h - 6) + window.scrollY}px`;
+        opener = a;
+        g.focus();
+      };
+
+      document.addEventListener('click', (e) => {
+        const a = (e.target as Element).closest?.('a[href^="mailto:"]') as HTMLAnchorElement | null;
+        if (a && !menu.contains(a)) {
+          if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+          e.preventDefault();
+          if (opener === a && !menu.hidden) close(); else open(a);
+          return;
+        }
+        if (!menu.hidden && !menu.contains(e.target as Node)) close();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (menu.hidden) return;
+        if (e.key === 'Escape') { close(true); return; }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          const items = [...menu.querySelectorAll<HTMLElement>('.mail-menu__item')];
+          const i = items.indexOf(document.activeElement as HTMLElement);
+          items[(i + (e.key === 'ArrowDown' ? 1 : items.length - 1)) % items.length]?.focus();
+          e.preventDefault();
+        }
+      });
+      window.addEventListener('resize', () => close());
+    }
   </script>
 </body>
 </html>

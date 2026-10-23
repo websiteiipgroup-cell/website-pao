@@ -286,3 +286,18 @@ a:hover { text-decoration-thickness: 2px; }
 .hero--latar .button--quiet { color: #f6f3ea; border-color: #f6f3ea; }
 .hero--latar .button--quiet:hover { background: #f6f3ea; color: var(--ink); }
 .hero--latar .band { margin-top: 0; }
+
+/* ---------- Email chooser (computers only) ---------- */
+.mail-menu {
+  position: absolute; z-index: 50; min-width: 200px; padding: 6px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(27, 35, 31, 0.18);
+  display: flex; flex-direction: column;
+}
+.mail-menu[hidden] { display: none; }
+.mail-menu__item {
+  display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 6px;
+  font: inherit; font-size: 0.95rem; color: var(--ink); text-decoration: none;
+  background: none; border: 0; cursor: pointer;
+}
+.mail-menu__item:hover, .mail-menu__item:focus-visible { background: var(--clay); outline: none; }
