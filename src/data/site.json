@@ -1,30 +1,51 @@
 {
-  "nama_merek": "Refinol",
-  "nama_perusahaan": "PT Pilar Artha Oetama",
-  "tagline": "Activated bleaching earth",
-  "deskripsi": "Refinol is activated bleaching earth from PT Pilar Artha Oetama, made for palm, palm kernel, coconut and soft oil refineries.",
-  "logo": "",
   "ikon": "/favicon.ico",
-  "og_image": "/images/uploads/granules.jpg",
-  "alamat": "Jl. Alex Bangun no. A-11, Jatiasih, Bekasi 17117, Indonesia",
-  "link_maps": "https://www.google.com/maps/search/?api=1&query=Jl.+Alex+Bangun+no.+A-11+Jatiasih+Bekasi",
-  "telepon": "+62-21-8273-5358",
-  "fax": "+62-21-8273-5359",
-  "email": "enquiry@refinol.com",
-  "whatsapp": "",
-  "linkedin": "",
-  "instagram": "",
-  "menu": [
-    { "label": "About", "link": "/about/" },
-    { "label": "Technology", "link": "/technology/" },
-    { "label": "Process", "link": "/process/" },
-    { "label": "Quality control", "link": "/quality-control/" },
-    { "label": "Laboratory", "link": "/laboratory/" },
-    { "label": "Products", "link": "/products/" },
-    { "label": "Contact", "link": "/contact/" }
-  ],
-  "produk_judul": "Products",
-  "produk_pengantar": "We are changing the tradition of producing a few fixed grades and asking customers to find out which one suits them. Instead, we develop product from each customer’s needs and their market.",
+  "nama_perusahaan": "PT Pilar Artha Oetama",
+  "telepon": "+62-21-38277888",
+  "nama_merek": "Refinol",
+  "alamat": "Jl. Cilimus No. 1, Bantar Panjang, Kab. Tangerang, Banten 15721, Indonesia",
+  "logo": "",
+  "tagline": "Activated bleaching earth",
   "produk_gambar": "/images/uploads/oils.jpg",
-  "berita_judul": "News"
+  "whatsapp": "",
+  "instagram": "",
+  "og_image": "/images/uploads/granules.jpg",
+  "deskripsi": "Refinol is activated bleaching earth from PT Pilar Artha Oetama, made for palm, palm kernel, coconut and soft oil refineries.",
+  "berita_judul": "News",
+  "produk_pengantar": "We are changing the tradition of producing a few fixed grades and asking customers to find out which one suits them. Instead, we develop product from each customer’s needs and their market.",
+  "email": "enquiry@refinol.com",
+  "link_maps": "https://www.google.com/maps/search/?api=1&query=Jl.+Cilimus+No.+1+Bantar+Panjang+Kab.+Tangerang+Banten+15721",
+  "fax": "",
+  "linkedin": "",
+  "produk_judul": "Products",
+  "menu": [
+    {
+      "label": "About",
+      "link": "/about/"
+    },
+    {
+      "label": "Technology",
+      "link": "/technology/"
+    },
+    {
+      "label": "Process",
+      "link": "/process/"
+    },
+    {
+      "label": "Quality control",
+      "link": "/quality-control/"
+    },
+    {
+      "label": "Laboratory",
+      "link": "/laboratory/"
+    },
+    {
+      "label": "Products",
+      "link": "/products/"
+    },
+    {
+      "label": "Contact",
+      "link": "/contact/"
+    }
+  ]
 }
