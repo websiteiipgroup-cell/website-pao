@@ -13,7 +13,7 @@ blocks:
     pengantar: We have invested, and will keep investing, in state-of-the-art instruments.
     isi: They help us understand more about raw material, process control, quality
       control and quality assurance.
-    gambar: /images/uploads/laboratory.jpg
+    gambar: /images/uploads/lab.jpeg
     gambar_alt: Refinol laboratory benches and instruments
     posisi_foto: kanan
 ---
