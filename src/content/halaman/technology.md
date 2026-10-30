@@ -5,7 +5,7 @@ deskripsi: Deposit and geology knowledge that lets Refinol match raw material to
 langkah: 1
 ringkasan: Deposit and geology knowledge that lets us match raw material to each
   customer’s process.
-gambar: /images/uploads/mining.jpg
+gambar: /images/uploads/mining.jpeg
 blocks:
   - type: judul_halaman
     judul: Technology
